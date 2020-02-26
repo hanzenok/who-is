@@ -24,19 +24,25 @@ angular.module('app', ['ui.bootstrap'])
     $scope.sessionId = uuidv4()
 
     $scope.askQuestion = () => {
-        addMessage($scope.question, 'human')
-        askRobot($scope.question)
-        $scope.question = ''
+      addMessage($scope.question, 'human')
+      askRobot($scope.question)
+      $scope.question = ''
     }
 
     $scope.messages = [
         {
             type: 'robot',
-            content: $sce.trustAsHtml('<p>test1</p>')
-        },
-        {
-            type: 'human',
-            content: $sce.trustAsHtml('<p>test2</p>')
+            content: $sce.trustAsHtml(
+              '<p>Hi there organic creature!</p>\
+              <p>Please be free to ask me any question. For example:\
+              <ul>\
+                <li>What is the surface of Earth?</li>\
+                <li>Who is Mykhailo?</li>\
+                <li>What is his job?</li>\
+                <li>etc</li>\
+              </ul>\
+              </p>'
+            )
         }
     ]
 
@@ -45,9 +51,6 @@ angular.module('app', ['ui.bootstrap'])
         RobotService.askQuestion(question, $scope.sessionId)
           .then(response => {
             console.log('Got the response:', response)
-            if (response.data === 'fallback') {
-              return {data: '<p> I dont understand you man</p>'}
-            }
             return RobotService.explainResponse(response.data)
           })
           .then(content => {
@@ -70,7 +73,9 @@ angular.module('app', ['ui.bootstrap'])
         })
         $timeout(() => {
             const scroll = document.getElementById('msg_history');
+            const input = document.getElementById('input');
             scroll.scrollTop = scroll.scrollHeight;
+            input.focus();
         })
     }
 

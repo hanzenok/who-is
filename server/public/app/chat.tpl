@@ -1,12 +1,12 @@
 <div ng-controller="ChatCtrl">
-  <div class="container">
+  <div>
     <div class="messaging">
       <div class="inbox_msg">
         <div class="mesgs">
           <div id="msg_history">
             <div
               ng-repeat="message in messages"
-              ng-class="{'robot_msg': message.type ==' robot', 'human_msg': message.type == 'human'}">
+              ng-class="{'robot_msg': message.type == 'robot', 'human_msg': message.type == 'human'}">
               <!-- robot message -->
               <div ng-if="message.type == 'robot'" class="robot_msg_img">
                 <img src="../bot.png" alt="sunil">
@@ -30,8 +30,8 @@
         </div>
         <div class="type_msg">
           <div class="input_msg_write">
-            <input type="text" class="write_msg" placeholder="Type a message" ng-model="question" ng-disabled="robotThinks" ng-keyup="$event.keyCode == 13 && question ? askQuestion() : null"/>
-            <button class="msg_send_btn btn btn-primary" type="button" ng-click="askQuestion()" ng-disabled="!question">
+            <input id="input" type="text" class="write_msg" placeholder="Type a message" ng-model="question" ng-disabled="robotThinks" ng-keyup="$event.keyCode == 13 && question ? askQuestion() : null"/>
+            <button class="msg_send_btn btn btn-success" type="button" ng-click="askQuestion()" ng-disabled="!question">
               Send
             </button>
           </div>
