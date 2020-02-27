@@ -56,14 +56,17 @@ angular.module('app', ['ui.bootstrap'])
   function HeaderCtrl($scope, $interval, NameService) {
     const { names } = NameService
     const n = names.length
+    $scope.isItalic = true
     $scope.name = 'he'
 
     var promise = $interval(() => {
       if (NameService.stop) {
         $interval.cancel(promise)
+        $scope.isItalic = false
         $scope.name = 'Mykhailo'
       } else {
         const rand = Math.floor((Math.random()*n))
+        $scope.isItalic = true
         $scope.name = names[rand]
       }
 
@@ -89,8 +92,7 @@ angular.module('app', ['ui.bootstrap'])
               <p>Please feel free to ask me any question. For example:\
               <ul>\
                 <li>What is the surface of Earth?</li>\
-                <li>Who is Mykhailo?</li>\
-                <li>What is his job?</li>\
+                <li>What is my purpose?</li>\
                 <li>etc</li>\
               </ul>\
               </p>'
@@ -117,7 +119,10 @@ angular.module('app', ['ui.bootstrap'])
           })
           .catch(error => {
             console.log('ERRORRRR', error)
-            addMessage('wtf', 'robot')
+            addMessage(
+              'My circuits detected an error\
+              Please come back in a minute', 'robot'
+              )
           })
           .finally(() => {
             $scope.robotThinks = false
