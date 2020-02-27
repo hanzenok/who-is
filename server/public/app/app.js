@@ -48,7 +48,8 @@ angular.module('app', ['ui.bootstrap'])
         'Mika',
         'Mykhaelo',
         'Mykhaïlo',
-        'Mykhailo'
+        'Mykhailo',
+        'Mikhailo'
       ]
     }
   }
@@ -70,7 +71,7 @@ angular.module('app', ['ui.bootstrap'])
         $scope.name = names[rand]
       }
 
-    }, 5000);
+    }, 4000);
   }
 
   function ChatCtrl($scope, $sce, $timeout, RobotService, NameService) {
@@ -161,8 +162,42 @@ angular.module('app', ['ui.bootstrap'])
       })
   }
 
-  function HowToUseCtrl($scope, $sce) {
-    $scope.content = $sce.trustAsHtml('TODO: How to use it?')
+  function HowToUseCtrl($scope, $sce, $timeout, RobotService) {
+    Promise
+      .all([
+        RobotService.explainResponse('howtouse_msg1'),
+        RobotService.explainResponse('howtouse_msg2'),
+        RobotService.explainResponse('howtouse_msg3')
+      ])
+      .then(values => {
+        $scope.msg1 = $sce.trustAsHtml(values[0].data)
+        $scope.msg2 = $sce.trustAsHtml(values[1].data)
+        $scope.msg3 = $sce.trustAsHtml(values[2].data)
+      })
+      .catch(error => {
+        console.error(error)
+        $scope.msg1 = 'Something went wrong'
+      })
+
+    $scope.state = null
+
+    $scope.answerQuestion = () => {
+      const answer = $scope.answer.toLowerCase()
+      // if you reading this you a real hacker
+      if (
+          answer.includes('statistical') &&
+          answer.includes('analysis') &&
+          answer.includes('data') &&
+          answer.includes('reconfiguration')
+      ) {
+        $scope.state = 'won'
+      } else {
+        $scope.state = 'lost'
+      }
+      $timeout(() => {
+        $scope.answer = ''
+      })
+    }
   }
 
   function HowDoneCtrl($scope, $sce) {
