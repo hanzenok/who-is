@@ -5,7 +5,7 @@
 
 img { max-width:100%; } 
 
-.inbox_msg {
+.parent_pane {
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
@@ -14,6 +14,32 @@ img { max-width:100%; }
   overflow: hidden;
 }
 
+.child_pane {
+  height: 516px;
+  overflow-y: auto;
+  padding: 15px 20px;
+  background-color: #efefef;
+}
+
+.text_pane {
+  height: 584px;
+}
+
+/* Video */
+.video_pane {
+  height: 584px;
+  display: flex;
+  justify-content: center;
+  padding: 15px 0 0 0;
+}
+
+video {
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Chat */
 .robot_msg_img {
   display: inline-block;
   width: 6%;
@@ -41,10 +67,6 @@ img { max-width:100%; }
   display: block;
   font-size: 12px;
   margin: 8px 0 0;
-}
-
-.mesgs {
-  background-color: #efefef;
 }
 
 .sent_msg p {
@@ -104,12 +126,6 @@ img { max-width:100%; }
   border: none;
 }
 
-#msg_history {
-  height: 516px;
-  overflow-y: auto;
-  padding: 15px 20px;
-}
-
 /* Loading */
 .loading {
   animation: rotation 8s infinite linear;
@@ -142,7 +158,7 @@ img { max-width:100%; }
   border-radius: 1rem;
 }
 
-input:focus {
+input:focus, video:focus {
   outline: none;
 }
 

@@ -10,20 +10,20 @@
 
   <body ng-app="app">
     <div class="container">
-      <h1>Who is?</h1>
-      <uib-tabset>
-          <uib-tab index="0" heading="ChatBot">
-              <chat></chat>
-          </uib-tab>
-          <uib-tab index="1" heading="Why ChatBot?">
-              TODO: Why ChatBot?
-          </uib-tab>
-          <uib-tab index="2" heading="How to use it?">
-            TODO: How to use it?
-          </uib-tab>
-          <uib-tab index="3" heading="How it is done?">
-              TODO: How it is done?
-            </uib-tab>
+      <header></header>
+      <uib-tabset active="active" ng-init="active = 1">
+        <uib-tab index="0" heading="ChatBot">
+          <chat></chat>
+        </uib-tab>
+        <uib-tab index="1" heading="Intro">
+          <intro></intro>
+        </uib-tab>
+        <uib-tab index="2" heading="How to use chat?">
+          <howtouse></howtouse>
+        </uib-tab>
+        <uib-tab index="3" heading="How the chat is done?">
+          <howdone></howdone>
+        </uib-tab>
         </uib-tabset>
     </div>
     

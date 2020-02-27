@@ -1,9 +1,8 @@
 <div ng-controller="ChatCtrl">
   <div>
     <div class="messaging">
-      <div class="inbox_msg">
-        <div class="mesgs">
-          <div id="msg_history">
+      <div class="parent_pane">
+          <div id="msg_history" class="child_pane">
             <div
               ng-repeat="message in messages"
               ng-class="{'robot_msg': message.type == 'robot', 'human_msg': message.type == 'human'}">
@@ -27,7 +26,6 @@
               </div>
             </div>
           </div>
-        </div>
         <div class="type_msg">
           <div class="input_msg_write">
             <input id="input" type="text" class="write_msg" placeholder="Type a message" ng-model="question" ng-disabled="robotThinks" ng-keyup="$event.keyCode == 13 && question ? askQuestion() : null"/>
