@@ -45,7 +45,7 @@
     </div>
   <div class="type_msg">
     <div class="input_msg_write">
-      <input id="input" type="text" class="write_msg" placeholder="Type a message" ng-model="answer" ng-disabled="state === 'won'" ng-keyup="$event.keyCode == 13 && answer ? answerQuestion() : null"/>
+      <input id="input2" type="text" class="write_msg" placeholder="Type a message" ng-model="answer" ng-disabled="state === 'won' || !msg1" ng-keyup="$event.keyCode == 13 && answer ? answerQuestion() : null"/>
       <button class="msg_send_btn btn btn-success" type="button" ng-click="answerQuestion()" ng-disabled="!answer">
         Answer
       </button>

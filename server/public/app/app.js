@@ -111,11 +111,9 @@ angular.module('app', ['ui.bootstrap'])
             if (id === 'first_name') {
               NameService.stop = true
             }
-            console.log('Got the response:', response)
             return RobotService.explainResponse(id)
           })
           .then(content => {
-            console.log('Got the content', content)
             addMessage(content.data, 'robot')
           })
           .catch(error => {
@@ -137,7 +135,7 @@ angular.module('app', ['ui.bootstrap'])
         })
         $timeout(() => {
             const scroll = document.getElementById('msg_history');
-            const input = document.getElementById('input');
+            const input = document.getElementById('input1');
             scroll.scrollTop = scroll.scrollHeight;
             input.focus();
         })
@@ -163,6 +161,7 @@ angular.module('app', ['ui.bootstrap'])
   }
 
   function HowToUseCtrl($scope, $sce, $timeout, RobotService) {
+    $scope.msg1 = $sce.trustAsHtml('<i>Loading ...</i>')
     Promise
       .all([
         RobotService.explainResponse('howtouse_msg1'),
@@ -196,11 +195,14 @@ angular.module('app', ['ui.bootstrap'])
       }
       $timeout(() => {
         $scope.answer = ''
+        const input = document.getElementById('input2')
+        input.focus()
       })
     }
   }
 
   function HowDoneCtrl($scope, $sce, RobotService) {
+    $scope.msg1 = $sce.trustAsHtml('<i>Loading ...</i>')
     Promise
     .all([
       RobotService.explainResponse('howdone_msg1'),

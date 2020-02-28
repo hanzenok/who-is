@@ -26,13 +26,6 @@ img { max-width:100%; }
 }
 
 /* Video */
-.video_pane {
-  height: 584px;
-  display: flex;
-  justify-content: center;
-  padding: 15px 0 0 0;
-}
-
 video {
   border-radius: 4px;
   width: 100%;
