@@ -1,5 +1,24 @@
 <div ng-controller="HowDoneCtrl">
   <div class="parent_pane">
-    <div class="child_pane text_pane" ng-bind-html="content"></div>
+    <div id="msg_history" class="child_pane">
+      <!-- message 1 -->
+      <div class="robot_msg">
+        <div class="robot_msg_img">
+          <img src="../human.png" alt="sunil">
+        </div>
+        <div ng-if="msg1" class="received_msg">
+          <div class="received_withd_msg" ng-bind-html="msg1"></div>
+        </div>
+      </div>
+      <!-- message 2 -->
+      <div class="robot_msg">
+        <div class="robot_msg_img">
+          <img src="../human.png" alt="sunil">
+        </div>
+        <div ng-if="msg2" class="received_msg">
+          <div class="received_withd_msg" ng-bind-html="msg2"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -200,6 +200,18 @@ angular.module('app', ['ui.bootstrap'])
     }
   }
 
-  function HowDoneCtrl($scope, $sce) {
-    $scope.content = $sce.trustAsHtml('TODO: How it is done?')
+  function HowDoneCtrl($scope, $sce, RobotService) {
+    Promise
+    .all([
+      RobotService.explainResponse('howdone_msg1'),
+      RobotService.explainResponse('howdone_msg2'),
+    ])
+    .then(values => {
+      $scope.msg1 = $sce.trustAsHtml(values[0].data)
+      $scope.msg2 = $sce.trustAsHtml(values[1].data)
+    })
+    .catch(error => {
+      console.error(error)
+      $scope.msg1 = 'Something went wrong'
+    })
   }
