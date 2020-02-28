@@ -27,6 +27,8 @@ angular.module('app', ['ui.bootstrap'])
     controller: 'HowDoneCtrl'
   });
 
+  const LOADING = '<i>Loading ...</i>'
+  const ERROR = 'Something went wrong'
 
   function RobotService($http) {
     return {
@@ -57,17 +59,17 @@ angular.module('app', ['ui.bootstrap'])
   function HeaderCtrl($scope, $interval, NameService) {
     const { names } = NameService
     const n = names.length
-    $scope.isItalic = true
+    $scope.showBrackets = true
     $scope.name = 'he'
 
     var promise = $interval(() => {
       if (NameService.stop) {
         $interval.cancel(promise)
-        $scope.isItalic = false
+        $scope.showBrackets = false
         $scope.name = 'Mykhailo'
       } else {
         const rand = Math.floor((Math.random()*n))
-        $scope.isItalic = true
+        $scope.showBrackets = true
         $scope.name = names[rand]
       }
 
@@ -161,21 +163,19 @@ angular.module('app', ['ui.bootstrap'])
   }
 
   function HowToUseCtrl($scope, $sce, $timeout, RobotService) {
-    $scope.msg1 = $sce.trustAsHtml('<i>Loading ...</i>')
+    $scope.msg1 = $sce.trustAsHtml(LOADING)
     Promise
       .all([
         RobotService.explainResponse('howtouse_msg1'),
-        RobotService.explainResponse('howtouse_msg2'),
-        RobotService.explainResponse('howtouse_msg3')
+        RobotService.explainResponse('howtouse_msg2')
       ])
       .then(values => {
         $scope.msg1 = $sce.trustAsHtml(values[0].data)
         $scope.msg2 = $sce.trustAsHtml(values[1].data)
-        $scope.msg3 = $sce.trustAsHtml(values[2].data)
       })
       .catch(error => {
         console.error(error)
-        $scope.msg1 = 'Something went wrong'
+        $scope.msg1 = ERROR
       })
 
     $scope.state = null
@@ -190,6 +190,15 @@ angular.module('app', ['ui.bootstrap'])
           answer.includes('reconfiguration')
       ) {
         $scope.state = 'won'
+        $scope.msg3 = $sce.trustAsHtml(LOADING)
+        RobotService.explainResponse('howtouse_msg3')
+          .then((value) => {
+            $scope.msg3 = $sce.trustAsHtml(value.data)
+          })
+          .catch(error => {
+            console.error(error)
+            $scope.msg3 = ERROR
+          })
       } else {
         $scope.state = 'lost'
       }
@@ -202,7 +211,7 @@ angular.module('app', ['ui.bootstrap'])
   }
 
   function HowDoneCtrl($scope, $sce, RobotService) {
-    $scope.msg1 = $sce.trustAsHtml('<i>Loading ...</i>')
+    $scope.msg1 = $sce.trustAsHtml(LOADING)
     Promise
     .all([
       RobotService.explainResponse('howdone_msg1'),
@@ -214,6 +223,6 @@ angular.module('app', ['ui.bootstrap'])
     })
     .catch(error => {
       console.error(error)
-      $scope.msg1 = 'Something went wrong'
+      $scope.msg1 = ERROR
     })
   }

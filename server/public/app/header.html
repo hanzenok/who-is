@@ -1,8 +1,13 @@
 <div ng-controller="HeaderCtrl">
   <h2 class='name'>
-    Can 
-    <i ng-if="isItalic" uib-tooltip="You should probably ask robot about the name" tooltip-placement="right">{{name}}</i> 
-    <span ng-if="!isItalic" uib-tooltip="You should probably ask robot about the name" tooltip-placement="right">{{name}}</span>
-    Accelarate & Connect?
+    <span>Can</span>
+    <span class="blinking_name">
+      <span ng-show="showBrackets">[</span>
+      <span uib-tooltip="You should probably ask robot about the name"  tooltip-placement="bottom">
+        {{name}}
+      </span>
+      <span ng-show="showBrackets">]</span>
+    </span>
+    <span>Accelarate & Connect?</span>
   </h2>
 </div>
