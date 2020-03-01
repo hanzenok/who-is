@@ -164,6 +164,7 @@ angular.module('app', ['ui.bootstrap'])
 
   function HowToUseCtrl($scope, $sce, $timeout, RobotService) {
     $scope.msg1 = $sce.trustAsHtml(LOADING)
+    $scope.nbLoss = 0
     Promise
       .all([
         RobotService.explainResponse('howtouse_msg1'),
@@ -178,8 +179,6 @@ angular.module('app', ['ui.bootstrap'])
         $scope.msg1 = ERROR
       })
 
-    $scope.state = null
-
     $scope.answerQuestion = () => {
       const answer = $scope.answer.toLowerCase()
       // if you reading this you a real hacker
@@ -189,7 +188,7 @@ angular.module('app', ['ui.bootstrap'])
           answer.includes('data') &&
           answer.includes('reconfiguration')
       ) {
-        $scope.state = 'won'
+        $scope.won = true
         $scope.msg3 = $sce.trustAsHtml(LOADING)
         RobotService.explainResponse('howtouse_msg3')
           .then((value) => {
@@ -200,7 +199,8 @@ angular.module('app', ['ui.bootstrap'])
             $scope.msg3 = ERROR
           })
       } else {
-        $scope.state = 'lost'
+        $scope.nbLoss++
+        $scope.lost = true
       }
       $timeout(() => {
         $scope.answer = ''

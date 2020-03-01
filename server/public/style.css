@@ -44,9 +44,22 @@ video {
 }
 
 /* Chat */
+
+.circle {
+  position: absolute;
+  background-color: red;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px;
+}
+
 .robot_msg_img {
+  position: relative;
   display: inline-block;
-  width: 6%;
+  width: 6.5rem;
 }
 
 .received_msg {
