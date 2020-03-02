@@ -102,7 +102,7 @@ angular.module('app', ['ui.bootstrap'])
               '<p>Hi there organic creature!</p>\
               <p>Please feel free to ask me any question. For example:\
               <ul>\
-                <li>What is the surface of Earth?</li>\
+                <li>What is the surface of the Earth?</li>\
                 <li>What is my purpose?</li>\
                 <li>etc</li>\
               </ul>\
