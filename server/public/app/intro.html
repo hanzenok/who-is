@@ -2,31 +2,43 @@
   <div class="parent_pane">
     <div id="msg_history" class="child_pane">
       <!-- intro 1 -->
-      <div class="robot_msg">
-        <div class="robot_msg_img">
+      <div class="in_msg">
+        <div class="in_msg_img">
           <img src="../human.png" alt="sunil">
         </div>
         <div class="received_msg">
-          <div class="received_withd_msg"><p>Hi there! Here is an introduction video that I prepared for you</p></div>
+          <div class="received_withd_msg" ng-bind-html="msg1"></div>
+        </div>
+      </div>
+      <!-- robot -->
+      <div ng-if="msg2" class="in_msg">
+        <div class="in_msg_img">
+          <img src="../bot.png" alt="sunil">
+        </div>
+        <div class="received_msg">
+          <div class="received_withd_msg">
+            Yeah! Ask me anything!
+          </div>
+        </div>
+      </div>
+      <!-- intro 2 -->
+      <div ng-if="msg2" class="in_msg">
+        <div class="in_msg_img">
+          <img src="../human.png" alt="sunil">
+        </div>
+        <div class="received_msg">
+          <div class="received_withd_msg" ng-bind-html="msg2"></div>
         </div>
       </div>
       <!-- video-->
-      <div class="robot_msg">
-        <div class="robot_msg_img">
+      <div ng-if="video" class="in_msg">
+        <div class="in_msg_img">
           <img src="../human.png" alt="sunil">
         </div>
         <div class="received_msg">
-          <div class="received_withd_msg" ng-bind-html="content"></div>
+          <div class="received_withd_msg" ng-bind-html="video"></div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- TODO remove it -->
-  <div style="color: red">
-    @Alexis, @Marc:
-    <ul>
-      <li>C'est une vidéo pour donner un example. Je vais la refaire en étant plus présentable, avec meilleur son</li>
-      <li>Je commance à parler à 0:34</li>
-    </ul>
   </div>
 </div>

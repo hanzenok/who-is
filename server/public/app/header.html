@@ -1,13 +1,14 @@
 <div ng-controller="HeaderCtrl">
   <h2 class='name'>
     <span>Can</span>
-    <span class="blinking_name">
-      <span ng-show="showBrackets">[</span>
+    <span ng-show="nameUnknown" class="blinking_name unknown">
+      <span>[</span>
       <span uib-tooltip="You should probably ask robot about the name"  tooltip-placement="bottom">
         {{name}}
       </span>
-      <span ng-show="showBrackets">]</span>
+      <span>]</span>
     </span>
-    <span>Accelarate & Connect?</span>
+    <span ng-hide="nameUnknown">{{name}}</span>
+    <span>Accelerate & Connect?</span>
   </h2>
 </div>

@@ -25,19 +25,26 @@ angular.module('app', ['ui.bootstrap'])
   .component('howdone', {
     templateUrl: 'app/howdone.html',
     controller: 'HowDoneCtrl'
-  });
+  })
 
   const LOADING = '<i>Loading ...</i>'
   const ERROR = 'Something went wrong'
 
   function RobotService($http) {
+    const timeout = 15000
     return {
-      askQuestion: (question, sessionId, callback) => {
-          const data = { question, sessionId }
-          return $http.post('/r2d2', data, { headers: {'Content-Type': 'application/json' }});
+      askQuestion: (question, sessionId) => {
+        const data = { question, sessionId }
+        return $http.post('/r2d2', data, {
+          headers: {'Content-Type': 'application/json' },
+          timeout
+        })
       },
       explainResponse: (response) => {
-          return $http.get(`/c3po/${response}`);
+        return $http.get(`/c3po/${response}`, { timeout })
+      },
+      whatToAsk: () => {
+        return $http.get(`/c3po/question`, { timeout })
       }
     }
   }
@@ -59,26 +66,27 @@ angular.module('app', ['ui.bootstrap'])
   function HeaderCtrl($scope, $interval, NameService) {
     const { names } = NameService
     const n = names.length
-    $scope.showBrackets = true
+    $scope.nameUnknown = true
     $scope.name = 'he'
 
     var promise = $interval(() => {
       if (NameService.stop) {
         $interval.cancel(promise)
-        $scope.showBrackets = false
+        $scope.nameUnknown = false
         $scope.name = 'Mykhailo'
       } else {
         const rand = Math.floor((Math.random()*n))
-        $scope.showBrackets = true
+        $scope.nameUnknown = true
         $scope.name = names[rand]
       }
 
-    }, 4000);
+    }, 4000)
   }
 
   function ChatCtrl($scope, $sce, $timeout, RobotService, NameService) {
     $scope.question = ''
     $scope.robotThinks = false
+    $scope.stop = false
     $scope.sessionId = uuidv4()
 
     $scope.askQuestion = () => {
@@ -106,59 +114,92 @@ angular.module('app', ['ui.bootstrap'])
     
 
     function askRobot(question) {
-        $scope.robotThinks = true
-        RobotService.askQuestion(question, $scope.sessionId)
-          .then(response => {
-            const { data: id } = response
-            if (id === 'first_name') {
+      $scope.robotThinks = true
+      RobotService.askQuestion(question, $scope.sessionId)
+        .then(response => {
+          const { data: id } = response
+
+          // fallback
+          if (id.includes('fallback')) {
+            return Promise.all([
+              RobotService.explainResponse(id),
+              RobotService.whatToAsk()
+            ])
+          }
+
+          // other cases
+          switch (id) {
+            // ask robot for a question suggestion
+            case 'suggest':
+              return RobotService.whatToAsk()
+            // end of conversation
+            case 'bye':
+              $scope.stop = true
+            // if name asked stop blinking name
+            case 'first_name':
               NameService.stop = true
-            }
-            return RobotService.explainResponse(id)
-          })
-          .then(content => {
-            addMessage(content.data, 'robot')
-          })
-          .catch(error => {
-            console.log('ERRORRRR', error)
-            addMessage(
-              'My circuits detected an error\
-              Please come back in a minute', 'robot'
-              )
-          })
-          .finally(() => {
-            $scope.robotThinks = false
-          })
+            default:
+              return RobotService.explainResponse(id)
+          }
+        })
+        .then(contents => {
+          if (!contents.length) contents = [ contents ]
+          contents.map(content => addMessage(content.data, 'robot'))
+        })
+        .catch(error => {
+          console.error(error)
+          let errorMessage = 'My circuits detected an error.'
+          if (error.status === -1) {
+            errorMessage = 'Error, your request has been timed out.'
+          }
+          addMessage(
+            errorMessage + ' Please come back in a minute',
+            'robot'
+            )
+        })
+        .finally(() => {
+          $scope.robotThinks = false
+        })
     }
 
     function addMessage(content, type) {
-        $scope.messages.push({
-            type,
-            content: $sce.trustAsHtml(`<p>${content}</p>`)
-        })
-        $timeout(() => {
-            const scroll = document.getElementById('msg_history');
-            const input = document.getElementById('input1');
-            scroll.scrollTop = scroll.scrollHeight;
-            input.focus();
-        })
+      $scope.messages.push({
+        type,
+        content: $sce.trustAsHtml(`<p>${content}</p>`)
+      })
+      $timeout(() => {
+        const scroll = document.getElementById('msg_history')
+        const input = document.getElementById('input1')
+        scroll.scrollTop = scroll.scrollHeight
+        input.focus()
+      })
     }
 
     function uuidv4() {
-        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-        );
-      }
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      )
+    }
   }
 
   function IntroCtrl($scope, $sce, RobotService) {
-    $scope.content = $sce.trustAsHtml('<i>Loading video ...</i>')
-    RobotService.explainResponse('video')
-      .then(response => {
-        $scope.content = $sce.trustAsHtml(response.data)
+    $scope.video = $sce.trustAsHtml('<i>Loading video ...</i>')
+    $scope.msg1 = $sce.trustAsHtml(LOADING)
+    Promise
+      .all([
+        RobotService.explainResponse('video'),
+        RobotService.explainResponse('intro_msg1'),
+        RobotService.explainResponse('intro_msg2')
+    ])
+      .then(values => {
+        $scope.video = $sce.trustAsHtml(values[0].data)
+        $scope.msg1 = $sce.trustAsHtml(values[1].data)
+        $scope.msg2 = $sce.trustAsHtml(values[2].data)
       })
       .catch(error => {
         console.error(error)
-        $scope.content = 'Could not load the video'
+        $scope.msg1 = ERROR
+        $scope.video = null
       })
   }
 
@@ -183,10 +224,10 @@ angular.module('app', ['ui.bootstrap'])
       const answer = $scope.answer.toLowerCase()
       // if you reading this you a real hacker
       if (
-          answer.includes('statistical') &&
-          answer.includes('analysis') &&
-          answer.includes('data') &&
-          answer.includes('reconfiguration')
+        answer.includes('statistical') &&
+        answer.includes('analysis') &&
+        answer.includes('data') &&
+        answer.includes('reconfiguration')
       ) {
         $scope.won = true
         $scope.msg3 = $sce.trustAsHtml(LOADING)

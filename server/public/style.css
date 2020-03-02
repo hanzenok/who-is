@@ -29,11 +29,15 @@ img { max-width:100%; }
 h2.name {
   display: flex;
   justify-content: space-between;
-  width: 55rem;
+  width: 52rem;
 }
 
 span.blinking_name {
   display: flex;
+}
+
+span.unknown:hover {
+  background-color: yellow;
 }
 
 /* Video */
@@ -56,7 +60,7 @@ video {
   border-radius: 10px;
 }
 
-.robot_msg_img {
+.in_msg_img {
   position: relative;
   display: inline-block;
   width: 6.5rem;
@@ -69,7 +73,7 @@ video {
   max-width: 80%;
  }
 
- .received_withd_msg {
+.received_withd_msg {
   background: white none repeat scroll 0 0;
   border-radius: 3px;
   color: #646464;
@@ -95,16 +99,16 @@ video {
   width: 100%;
   color: #646464;
 }
-.human_msg, .robot_msg { 
+.out_msg, .in_msg {
   margin: 26px 0 26px;
   display: flex;
 }
 
-.human_msg {
+.out_msg {
   justify-content: flex-end;
 }
 
-.robot_msg {
+.in_msg {
   justify-content: flex-start;
 }
 
