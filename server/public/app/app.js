@@ -31,7 +31,7 @@ angular.module('app', ['ui.bootstrap'])
   const ERROR = 'Something went wrong'
 
   function RobotService($http) {
-    const timeout = 15000
+    const timeout = 12000
     return {
       askQuestion: (question, sessionId) => {
         const data = { question, sessionId }
