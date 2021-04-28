@@ -5,7 +5,6 @@ angular.module('app', ['ui.bootstrap'])
   .controller('HowToUseCtrl', HowToUseCtrl)
   .controller('HowDoneCtrl', HowDoneCtrl)
   .factory('RobotService', RobotService)
-  .factory('NameService', NameService)
   .component('header', {
     templateUrl: 'app/header.html',
     controller: 'HeaderCtrl'
@@ -49,41 +48,10 @@ angular.module('app', ['ui.bootstrap'])
     }
   }
 
-  function NameService() {
-    return {
-      stop: false,
-      names: [
-        'Maycle',
-        'Mika',
-        'Mykhaelo',
-        'Mykhaïlo',
-        'Mykhailo',
-        'Mikhailo'
-      ]
-    }
+  function HeaderCtrl($scope, $interval) {
   }
 
-  function HeaderCtrl($scope, $interval, NameService) {
-    const { names } = NameService
-    const n = names.length
-    $scope.nameUnknown = true
-    $scope.name = 'he'
-
-    var promise = $interval(() => {
-      if (NameService.stop) {
-        $interval.cancel(promise)
-        $scope.nameUnknown = false
-        $scope.name = 'Mykhailo'
-      } else {
-        const rand = Math.floor((Math.random()*n))
-        $scope.nameUnknown = true
-        $scope.name = names[rand]
-      }
-
-    }, 4000)
-  }
-
-  function ChatCtrl($scope, $sce, $timeout, RobotService, NameService) {
+  function ChatCtrl($scope, $sce, $timeout, RobotService) {
     $scope.question = ''
     $scope.robotThinks = false
     $scope.stop = false
@@ -135,9 +103,6 @@ angular.module('app', ['ui.bootstrap'])
             // end of conversation
             case 'bye':
               $scope.stop = true
-            // if name asked stop blinking name
-            case 'first_name':
-              NameService.stop = true
             default:
               return RobotService.explainResponse(id)
           }
@@ -183,23 +148,19 @@ angular.module('app', ['ui.bootstrap'])
   }
 
   function IntroCtrl($scope, $sce, RobotService) {
-    $scope.video = $sce.trustAsHtml('<i>Loading video ...</i>')
     $scope.msg1 = $sce.trustAsHtml(LOADING)
     Promise
       .all([
-        RobotService.explainResponse('video'),
         RobotService.explainResponse('intro_msg1'),
         RobotService.explainResponse('intro_msg2')
     ])
       .then(values => {
-        $scope.video = $sce.trustAsHtml(values[0].data)
-        $scope.msg1 = $sce.trustAsHtml(values[1].data)
-        $scope.msg2 = $sce.trustAsHtml(values[2].data)
+        $scope.msg1 = $sce.trustAsHtml(values[0].data)
+        $scope.msg2 = $sce.trustAsHtml(values[1].data)
       })
       .catch(error => {
         console.error(error)
         $scope.msg1 = ERROR
-        $scope.video = null
       })
   }
 
